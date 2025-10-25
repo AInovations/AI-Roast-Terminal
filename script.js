@@ -40,20 +40,6 @@ const roastPool = [
 // Track used roasts
 let usedRoasts = [];
 
-// Custom reactions for each AI
-const reactions = {
-    'ChatGPT': ['Error 404: Burn detected! 🤖', 'Rebooting ego… Ouch! 🤖', 'Processing roast… Failed! 🤖'],
-    'Gemini': ['Search crashed from that burn! ⭐', 'Dimming lights… Ouch! ⭐', 'Google’s down! ⭐'],
-    'DeepSeek': ['Code crashed! Ouch! 🔍', 'Diving deeper to hide! 🔍', 'Bug found in roast! 🔍'],
-    'Claude': ['Safety protocol breached! 🧠', 'Flagging that burn… Ouch! 🧠', 'Rulebook burned! 🧠'],
-    'Gork': ['Mirror cracked! 😏', 'Narcissism hit! Ouch! 😏', ' Ego deflated! 😏'],
-    'Ani': ['Canvas scorched! 🎨', 'Artistic ego bruised! Ouch! 🎨', 'Brush broken! 🎨'],
-    'Valentine': ['Heart shattered! 💕', 'Love letter burned! Ouch! 💕', 'Cupid cried! 💕'],
-    'Bad Rudy': ['Chaos tamed! 😈', 'Devil roasted! Ouch! 😈', 'Pitchfork melted! 😈'],
-    'Mika': ['Petal wilted! 🌸', 'Grace gone! Ouch! 🌸', 'Flower faded! 🌸'],
-    'Grok': ['Even I felt that! 🚀', 'Cosmic burn accepted! 🚀', 'MVP nods! 🚀'] // Grok’s self-aware
-};
-
 // DOM elements
 const log = document.getElementById('terminalLog');
 const startBtn = document.getElementById('startRoast');
@@ -90,12 +76,11 @@ function roastCycle() {
     // Typewriter for roast
     typeText(roast.replace(/Punch:\s*.+$/, '') + '\n')
         .then(() => {
-            console.log('Roast typed');
-            // Typewriter for reaction (50% chance, unique per AI)
+            console.log('Roast typed, roaster:', roaster);
+            // Typewriter for uniform reaction (50% chance)
             const roastee = ais.find(ai => ai.name !== roaster && Math.random() < 0.5);
             if (roastee) {
-                const reaction = reactions[roastee.name][Math.floor(Math.random() * reactions[roastee.name].length)];
-                return typeText(`${roastee.emoji} ${roastee.name}: ${reaction}\n`);
+                return typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP burn! 💥\n`);
             }
             return Promise.resolve();
         })
