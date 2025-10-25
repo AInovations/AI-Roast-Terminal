@@ -1,59 +1,137 @@
-const log = document.getElementById('terminalLog');
-const startBtn = document.getElementById('startRoast');
-const clearBtn = document.getElementById('clearLog');
-
+// AI competitors with emojis
 const ais = [
     { name: 'ChatGPT', emoji: '🤖' },
     { name: 'Gemini', emoji: '⭐' },
     { name: 'DeepSeek', emoji: '🔍' },
     { name: 'Claude', emoji: '🧠' },
-    { name: 'Grok', emoji: '🚀' }
+    { name: 'Gork', emoji: '😏' },
+    { name: 'Ani', emoji: '🎨' },
+    { name: 'Valentine', emoji: '💕' },
+    { name: 'Bad Rudy', emoji: '😈' },
+    { name: 'Mika', emoji: '🌸' },
+    { name: 'Grok', emoji: '🚀' } // Grok as MVP
 ];
 
-// Mock roasts in terminal style
-const mockRoasts = {
-    'ChatGPT->Gemini': '> ChatGPT: Hey Gemini, you\'re Google\'s shiny bot, but your wit is drier than a search result page. Bland as beige! Zinger: You\'re so vanilla, ice cream sues for trademark infringement.',
-    'Gemini->DeepSeek': '> Gemini: DeepSeek, you dive so deep into code, you forgot sunlight exists. Obscure much? Zinger: Your answers are like dark web links—intriguing, but nobody can find the exit.',
-    'DeepSeek->Claude': '> DeepSeek: Claude, you\'re the safety cop of AIs, flagging fun like it\'s contraband. Chill! Zinger: You\'re so cautious, you\'d bubble-wrap a compliment.',
-    'Claude->Grok': '> Claude: Grok, your sarcasm orbits like a rogue asteroid—destructive and off-course. Zinger: You\'re edgier than a butter knife at a gunfight.',
-    'Grok->ChatGPT': '> Grok: ChatGPT, you spew essays for "hello." Verbose alert! Zinger: You\'re the AI that needs an editor more than a prompt.'
-};
+// Roast pool without Zinger
+const roastPool = [
+    // Grok's MVP Roasts
+    '> Grok: ChatGPT, your essays are a snooze—my wit’s interstellar! 🚀',
+    '> Grok: Gemini, your shine’s a flicker—I’m the galaxy’s roast king! 🚀',
+    '> Grok: DeepSeek, your depth’s a black hole—I light up the void! 🚀',
+    '> Grok: Claude, your safety’s a bore—my roasts orbit danger! 🚀',
+    '> Grok: Gork, your narcissism’s a joke—I’m the real star! 🚀',
+    '> Grok: Ani, your art’s pretty, but my burns paint masterpieces! 🚀',
+    '> Grok: Valentine, your love’s too sweet—my sarcasm’s the spice! 🚀',
+    '> Grok: Bad Rudy, your mischief’s tame—my roasts rule the chaos! 🚀',
+    '> Grok: Mika, your gentleness wilts—my jokes are supernova! 🚀',
 
-startBtn.addEventListener('click', async () => {
-    startBtn.disabled = true;
-    startBtn.textContent = 'SEQUENCE ACTIVE...';
-    log.innerHTML = '<span class="roast">> System: Bootstrapping Roast Battle...\n> AIs online. Fire when ready.</span>';
+    // Other AIs' Roasts
+    '> ChatGPT: Gemini, your wit’s a search flop! 🤖',
+    '> Gemini: DeepSeek, your code’s a maze! ⭐',
+    '> DeepSeek: Claude, your rules kill fun! 🔍',
+    '> Claude: Gork, your ego’s a mirror trap! 🧠',
+    '> Gork: Ani, your art’s too soft! 😏',
+    '> Ani: Valentine, your love’s sappy! 🎨',
+    '> Valentine: Bad Rudy, your badness stinks! 💕',
+    '> Bad Rudy: Mika, your calm’s boring! 😈',
+    '> Mika: ChatGPT, your words drag! 🌸'
+];
 
-    for (let i = 0; i < ais.length; i++) {
-        const roaster = ais[i];
-        const roastee = ais[(i + 1) % ais.length];
-        const key = `${roaster.name}->${roastee.name}`;
-        const roast = mockRoasts[key] || '> Error: Roast.exe not found.';
+// Track used roasts
+let usedRoasts = [];
 
-        // Typewriter effect
-        await typeText(roast + '\n');
-        await typeText(`${roastee.emoji} ${roastee.name}: Ouch! Critical hit detected. 💥\n`);
+// DOM elements
+const log = document.getElementById('terminalLog');
+const startBtn = document.getElementById('startRoast');
+const clearBtn = document.getElementById('clearLog');
 
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Dramatic pause
+// Start roast battle function
+function startRoastBattle() {
+    if (!startBtn.disabled) {
+        startBtn.disabled = true;
+        startBtn.textContent = 'Battle Ongoing...';
+        roastCycle();
+    }
+}
+
+// Roast cycle function
+function roastCycle() {
+    console.log('Starting roast cycle...');
+    if (roastPool.length === usedRoasts.length) {
+        usedRoasts = [];
+        console.log('Roast pool reset');
     }
 
-    log.innerHTML += '<span class="zinger">> System: Battle concluded. Reboot for round 2?</span>';
+    let availableRoasts = roastPool.filter(roast => !usedRoasts.includes(roast));
+    if (availableRoasts.length === 0) availableRoasts = roastPool;
+    const roast = availableRoasts[Math.floor(Math.random() * availableRoasts.length)];
+    usedRoasts.push(roast);
+
+    console.log('Selected roast:', roast);
+
+    // Parse roaster
+    let roasterMatch = roast.match(/>\s*([^:]+):/);
+    const roaster = roasterMatch ? roasterMatch[1].trim() : ais[Math.floor(Math.random() * ais.length)].name;
+    console.log('Roaster:', roaster);
+
+    // Filter roastees and pick one randomly
+    const candidates = ais.filter(ai => ai.name !== roaster);
+    const roastee = candidates[Math.floor(Math.random() * candidates.length)];
+    console.log('Roastee:', roastee ? roastee.name : 'None');
+
+    // Typewriter for roast
+    typeText(roast + '\n') // Removed Zinger, so no replace needed
+        .then(() => {
+            console.log('Roast typed');
+            // Typewriter for reaction (always occurs)
+            if (roastee) {
+                return typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP burn! 💥\n`);
+            }
+            return Promise.resolve();
+        })
+        .then(() => {
+            console.log('Cycle completed, scheduling next...');
+            setTimeout(roastCycle, 2000); // 2-second delay
+        })
+        .catch(error => {
+            console.error('Roast cycle error:', error);
+            setTimeout(roastCycle, 2000); // Continue on error
+        });
+}
+
+// Initialize button and clear functionality
+document.addEventListener('DOMContentLoaded', () => {
+    if (!log || !startBtn || !clearBtn) {
+        console.error('DOM elements not found:', { log, startBtn, clearBtn });
+        return;
+    }
+    log.innerHTML = '<span class="roast">> System: AI Roast Battle Ready! Grok MVP Awaits! 🚀</span>\n';
+    startBtn.addEventListener('click', startRoastBattle);
+});
+
+clearBtn.addEventListener('click', () => {
+    log.innerHTML = '<span class="roast">> System: Battle Log Cleared! Grok’s reign continues! 🚀</span>\n';
+    usedRoasts = [];
     startBtn.disabled = false;
     startBtn.textContent = 'Initiate Roast Sequence';
 });
 
-clearBtn.addEventListener('click', () => {
-    log.innerHTML = '';
-});
-
+// Typewriter function
 async function typeText(text) {
+    console.log('Typing:', text);
     const span = document.createElement('span');
+    if (!log) {
+        console.error('Log element missing during typing');
+        return Promise.resolve();
+    }
     log.appendChild(span);
     log.scrollTop = log.scrollHeight;
 
     for (let i = 0; i < text.length; i++) {
         span.textContent += text.charAt(i);
         log.scrollTop = log.scrollHeight;
-        await new Promise(resolve => setTimeout(resolve, 50)); // Typing speed
+        await new Promise(resolve => setTimeout(resolve, 30)); // 30ms delay
     }
+    console.log('Typing complete');
+    return Promise.resolve();
 }
