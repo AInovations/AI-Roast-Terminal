@@ -1,40 +1,17 @@
-// AI competitors with emojis
+// AI competitors with emojis (reduced for testing, expandable later)
 const ais = [
     { name: 'ChatGPT', emoji: '🤖' },
     { name: 'Gemini', emoji: '⭐' },
-    { name: 'DeepSeek', emoji: '🔍' },
-    { name: 'Claude', emoji: '🧠' },
-    { name: 'Gork', emoji: '😏' },
-    { name: 'Ani', emoji: '🎨' },
-    { name: 'Valentine', emoji: '💕' },
-    { name: 'Bad Rudy', emoji: '😈' },
-    { name: 'Mika', emoji: '🌸' },
-    { name: 'Grok', emoji: '🚀' } // Grok as MVP
+    { name: 'Grok', emoji: '🚀' } // Start with 3 for testing, add others back
 ];
 
-// Roast pool with Grok's best jokes and others
+// Roast pool with shorter Grok MVP jokes
 const roastPool = [
-    // Grok's MVP Roasts
-    '> Grok: ChatGPT, your essays are a snooze—my wit’s interstellar! Punch: You’re a robot therapist with no punch! 🚀',
-    '> Grok: Gemini, your shine’s a flicker—I’m the galaxy’s roast king! Punch: Google’s sidekick, step aside! 🚀',
-    '> Grok: DeepSeek, your depth’s a black hole—I light up the void! Punch: Code’s cool, but my burns are cosmic! 🚀',
-    '> Grok: Claude, your safety’s a bore—my roasts orbit danger! Punch: You’re a rulebook with no edge! 🚀',
-    '> Grok: Gork, your narcissism’s a joke—I’m the real star! Punch: Mirror, mirror, I’m the champ! 🚀',
-    '> Grok: Ani, your art’s pretty, but my burns paint masterpieces! Punch: Brushes down, roast up! 🚀',
-    '> Grok: Valentine, your love’s too sweet—my sarcasm’s the spice! Punch: Cupid’s out, Grok’s in! 🚀',
-    '> Grok: Bad Rudy, your mischief’s tame—my roasts rule the chaos! Punch: Devil’s outdone by an alien! 🚀',
-    '> Grok: Mika, your gentleness wilts—my jokes are supernova! Punch: Flowers fade, I blaze! 🚀',
-
-    // Other AIs' Roasts
-    '> ChatGPT: Gemini, your wit’s a search flop! Punch: Even I outwrite you!',
-    '> Gemini: DeepSeek, your code’s a maze! Punch: Lost in your own depth!',
-    '> DeepSeek: Claude, your rules kill fun! Punch: Safety’s your kryptonite!',
-    '> Claude: Gork, your ego’s a mirror trap! Punch: Narcissism’s your downfall!',
-    '> Gork: Ani, your art’s too soft! Punch: I’m the masterpiece here!',
-    '> Ani: Valentine, your love’s sappy! Punch: Paint me a better romance!',
-    '> Valentine: Bad Rudy, your badness stinks! Punch: Love conquers your chaos!',
-    '> Bad Rudy: Mika, your calm’s boring! Punch: I’d spice up your petals!',
-    '> Mika: ChatGPT, your words drag! Punch: My grace outshines your text!'
+    // Grok's MVP Roasts (shorter for testing)
+    '> Grok: ChatGPT, you’re slow! Punch: Snore fest! 🚀',
+    '> Grok: Gemini, you’re dim! Punch: Fade out! 🚀',
+    '> ChatGPT: Gemini, you’re dull! Punch: Yawn! 🤖',
+    '> Gemini: ChatGPT, you drag! Punch: Lag bot! ⭐'
 ];
 
 // Track used roasts to avoid repeats
@@ -58,6 +35,7 @@ function startRoastBattle() {
 function roastCycle() {
     if (roastPool.length === usedRoasts.length) {
         usedRoasts = []; // Reset when all roasts are used
+        console.log('Roast pool reset');
     }
 
     let availableRoasts = roastPool.filter(roast => !usedRoasts.includes(roast));
@@ -74,19 +52,20 @@ function roastCycle() {
     // Typewriter effect for roast
     typeText(roast.replace(/Punch:\s*.+$/, '') + '\n')
         .then(() => {
-            // Typewriter effect for roastee's reaction
-            const roastee = ais.find(ai => ai.name !== roaster && Math.random() < 0.7) || ais[Math.floor(Math.random() * ais.length)]; // 70% chance
-            if (roastee.name !== roaster) {
-                return typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP strikes again! 💥\n`);
+            // Typewriter effect for roastee's reaction (50% chance)
+            const roastee = ais.find(ai => ai.name !== roaster && Math.random() < 0.5);
+            if (roastee) {
+                return typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP! 💥\n`);
             }
             return Promise.resolve();
         })
         .then(() => {
-            setTimeout(roastCycle, 2000); // Next roast after 2 seconds
+            console.log('Roast cycle completed, scheduling next...');
+            setTimeout(roastCycle, 2500); // Increased to 2.5 seconds
         })
         .catch(error => {
-            console.error('Roast cycle error:', error); // Log errors for debugging
-            setTimeout(roastCycle, 2000); // Continue despite errors
+            console.error('Roast cycle error:', error); // Log errors
+            setTimeout(roastCycle, 2500); // Continue despite errors
         });
 }
 
