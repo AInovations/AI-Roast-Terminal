@@ -77,9 +77,10 @@ function roastCycle() {
     typeText(roast.replace(/Punch:\s*.+$/, '') + '\n')
         .then(() => {
             console.log('Roast typed, roaster:', roaster);
-            // Typewriter for uniform reaction (50% chance)
-            const roastee = ais.find(ai => ai.name !== roaster && Math.random() < 0.5);
-            if (roastee) {
+            // Random roastee from the list excluding roaster
+            let candidates = ais.filter(ai => ai.name !== roaster);
+            if (candidates.length > 0) {
+                const roastee = candidates[Math.floor(Math.random() * candidates.length)];
                 return typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP burn! 💥\n`);
             }
             return Promise.resolve();
