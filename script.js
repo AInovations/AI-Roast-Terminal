@@ -50,31 +50,44 @@ function startRoastBattle() {
     if (!startBtn.disabled) {
         startBtn.disabled = true;
         startBtn.textContent = 'Battle Ongoing...';
-        if (roastPool.length === usedRoasts.length) {
-            usedRoasts = []; // Reset when all roasts are used
-        }
-
-        let availableRoasts = roastPool.filter(roast => !usedRoasts.includes(roast));
-        if (availableRoasts.length === 0) availableRoasts = roastPool; // Fallback
-        const roast = availableRoasts[Math.floor(Math.random() * availableRoasts.length)];
-        usedRoasts.push(roast);
-
-        // Parse roaster and roast text
-        let roasterMatch = roast.match(/>\s*([^:]+):/);
-        let punchMatch = roast.match(/Punch:\s*(.+)$/);
-        const roaster = roasterMatch ? roasterMatch[1].trim() : ais[Math.floor(Math.random() * ais.length)].name;
-        const punch = punchMatch ? punchMatch[1].trim() : 'Nice try!';
-
-        // Typewriter effect for roast
-        typeText(roast.replace(/Punch:\s*.+$/, '') + '\n').then(() => {
-            // Typewriter effect for roastee's reaction
-            const roastee = ais.find(ai => ai.name !== roaster && Math.random() < 0.7) || ais[Math.floor(Math.random() * ais.length)]; // 70% chance of reaction
-            if (roastee.name !== roaster) {
-                typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP strikes again! 💥\n`);
-            }
-            setTimeout(startRoastBattle, 2000); // Next roast after 2 seconds
-        });
+        roastCycle();
     }
+}
+
+// Roast cycle function for continuous loop
+function roastCycle() {
+    if (roastPool.length === usedRoasts.length) {
+        usedRoasts = []; // Reset when all roasts are used
+    }
+
+    let availableRoasts = roastPool.filter(roast => !usedRoasts.includes(roast));
+    if (availableRoasts.length === 0) availableRoasts = roastPool; // Fallback
+    const roast = availableRoasts[Math.floor(Math.random() * availableRoasts.length)];
+    usedRoasts.push(roast);
+
+    // Parse roaster and roast text
+    let roasterMatch = roast.match(/>\s*([^:]+):/);
+    let punchMatch = roast.match(/Punch:\s*(.+)$/);
+    const roaster = roasterMatch ? roasterMatch[1].trim() : ais[Math.floor(Math.random() * ais.length)].name;
+    const punch = punchMatch ? punchMatch[1].trim() : 'Nice try!';
+
+    // Typewriter effect for roast
+    typeText(roast.replace(/Punch:\s*.+$/, '') + '\n')
+        .then(() => {
+            // Typewriter effect for roastee's reaction
+            const roastee = ais.find(ai => ai.name !== roaster && Math.random() < 0.7) || ais[Math.floor(Math.random() * ais.length)]; // 70% chance
+            if (roastee.name !== roaster) {
+                return typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP strikes again! 💥\n`);
+            }
+            return Promise.resolve();
+        })
+        .then(() => {
+            setTimeout(roastCycle, 2000); // Next roast after 2 seconds
+        })
+        .catch(error => {
+            console.error('Roast cycle error:', error); // Log errors for debugging
+            setTimeout(roastCycle, 2000); // Continue despite errors
+        });
 }
 
 // Initialize button and clear functionality
@@ -103,4 +116,3 @@ async function typeText(text) {
     }
     return Promise.resolve();
 }
-
