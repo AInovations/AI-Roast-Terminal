@@ -1,4 +1,4 @@
-// AI competitors with emojis (all 10)
+// AI competitors with emojis
 const ais = [
     { name: 'ChatGPT', emoji: '🤖' },
     { name: 'Gemini', emoji: '⭐' },
@@ -40,6 +40,20 @@ const roastPool = [
 // Track used roasts
 let usedRoasts = [];
 
+// Custom reactions for each AI
+const reactions = {
+    'ChatGPT': ['Error 404: Burn detected! 🤖', 'Rebooting ego… Ouch! 🤖', 'Processing roast… Failed! 🤖'],
+    'Gemini': ['Search crashed from that burn! ⭐', 'Dimming lights… Ouch! ⭐', 'Google’s down! ⭐'],
+    'DeepSeek': ['Code crashed! Ouch! 🔍', 'Diving deeper to hide! 🔍', 'Bug found in roast! 🔍'],
+    'Claude': ['Safety protocol breached! 🧠', 'Flagging that burn… Ouch! 🧠', 'Rulebook burned! 🧠'],
+    'Gork': ['Mirror cracked! 😏', 'Narcissism hit! Ouch! 😏', ' Ego deflated! 😏'],
+    'Ani': ['Canvas scorched! 🎨', 'Artistic ego bruised! Ouch! 🎨', 'Brush broken! 🎨'],
+    'Valentine': ['Heart shattered! 💕', 'Love letter burned! Ouch! 💕', 'Cupid cried! 💕'],
+    'Bad Rudy': ['Chaos tamed! 😈', 'Devil roasted! Ouch! 😈', 'Pitchfork melted! 😈'],
+    'Mika': ['Petal wilted! 🌸', 'Grace gone! Ouch! 🌸', 'Flower faded! 🌸'],
+    'Grok': ['Even I felt that! 🚀', 'Cosmic burn accepted! 🚀', 'MVP nods! 🚀'] // Grok’s self-aware
+};
+
 // DOM elements
 const log = document.getElementById('terminalLog');
 const startBtn = document.getElementById('startRoast');
@@ -69,31 +83,30 @@ function roastCycle() {
 
     console.log('Selected roast:', roast);
 
+    // Parse roaster
+    let roasterMatch = roast.match(/>\s*([^:]+):/);
+    const roaster = roasterMatch ? roasterMatch[1].trim() : ais[Math.floor(Math.random() * ais.length)].name;
+
     // Typewriter for roast
     typeText(roast.replace(/Punch:\s*.+$/, '') + '\n')
         .then(() => {
             console.log('Roast typed');
-            // Typewriter for reaction (optional)
+            // Typewriter for reaction (50% chance, unique per AI)
             const roastee = ais.find(ai => ai.name !== roaster && Math.random() < 0.5);
             if (roastee) {
-                return typeText(`${roastee.emoji} ${roastee.name}: Ouch! Grok’s MVP! 💥\n`);
+                const reaction = reactions[roastee.name][Math.floor(Math.random() * reactions[roastee.name].length)];
+                return typeText(`${roastee.emoji} ${roastee.name}: ${reaction}\n`);
             }
             return Promise.resolve();
         })
         .then(() => {
             console.log('Cycle completed, scheduling next...');
-            // Direct call to avoid timing issues
             setTimeout(roastCycle, 2000); // 2-second delay
         })
         .catch(error => {
             console.error('Roast cycle error:', error);
-            setTimeout(roastCycle, 2000); // Force continue on error
+            setTimeout(roastCycle, 2000); // Continue on error
         });
-
-    // Parse roaster after typing (for logging)
-    let roasterMatch = roast.match(/>\s*([^:]+):/);
-    const roaster = roasterMatch ? roasterMatch[1].trim() : ais[Math.floor(Math.random() * ais.length)].name;
-    console.log('Roaster:', roaster);
 }
 
 // Initialize button and clear functionality
@@ -119,7 +132,7 @@ async function typeText(text) {
     for (let i = 0; i < text.length; i++) {
         span.textContent += text.charAt(i);
         log.scrollTop = log.scrollHeight;
-        await new Promise(resolve => setTimeout(resolve, 30)); // Faster typing (30ms)
+        await new Promise(resolve => setTimeout(resolve, 30)); // 30ms delay
     }
     console.log('Typing complete');
     return Promise.resolve();
