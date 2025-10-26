@@ -49,6 +49,12 @@ body {
   animation: subtitleFlicker 3s infinite alternate;
 }
 
+.ca-text {
+  color: red;
+  text-align: center;
+  margin: 10px 0;
+}
+
 /* flicker + pulse animation for the title */
 @keyframes neonPulse {
   0% {
@@ -135,4 +141,5 @@ footer {
   font-family: monospace;
 
 }
+
 
