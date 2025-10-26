@@ -25,19 +25,68 @@ body {
   text-align: center;
   font-family: 'Courier New', monospace;
   font-weight: 900;
-  font-size: 72px; /* you can make this 80px or 100px for OBS */
-  text-shadow: 0 0 20px red, 0 0 40px darkred;
+  font-size: 80px; /* adjust 60–100px if needed for your screen */
+  text-shadow:
+    0 0 5px red,
+    0 0 10px red,
+    0 0 20px darkred,
+    0 0 40px red;
   margin-top: 40px;
   margin-bottom: 10px;
+  animation: neonPulse 2.5s infinite alternate;
 }
 
+/* yellow glowing subtitle */
 .subtitle {
   color: #ffcc00;
   text-align: center;
   font-family: 'Courier New', monospace;
-  font-size: 20px;
-  text-shadow: 0 0 10px #ffcc00;
+  font-size: 22px;
+  text-shadow:
+    0 0 5px #ffcc00,
+    0 0 10px #ffaa00,
+    0 0 20px #ff8800;
+  animation: subtitleFlicker 3s infinite alternate;
 }
+
+/* flicker + pulse animation for the title */
+@keyframes neonPulse {
+  0% {
+    text-shadow:
+      0 0 5px red,
+      0 0 10px red,
+      0 0 20px darkred,
+      0 0 40px red;
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 2px darkred,
+      0 0 5px red,
+      0 0 10px red,
+      0 0 20px darkred;
+    opacity: 0.85;
+  }
+  100% {
+    text-shadow:
+      0 0 10px red,
+      0 0 20px red,
+      0 0 30px darkred,
+      0 0 60px red;
+    opacity: 1;
+  }
+}
+
+/* slight flicker for subtitle */
+@keyframes subtitleFlicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    opacity: 1;
+  }
+  20%, 24%, 55% {
+    opacity: 0.5;
+  }
+}
+
 
 
 #chat-log {
@@ -86,3 +135,4 @@ footer {
   font-family: monospace;
 
 }
+
