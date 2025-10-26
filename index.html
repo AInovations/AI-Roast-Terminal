@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROAST TERMINAL</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Roast Terminal</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="terminal">
-        <div class="header">AI ROAST TERMINAL</div>
-        <div class="ca-section">
-    <span>Coin CA: <strong id="ca-text">8KrvXP6X257bMF9Wwq5tMNa62w4nZCpnNDpEjJFJpump</strong> (Click to Copy & Trade!)</span>
-</div>
-        <pre class="ascii">    
-                                                
-</pre>
-        <div class="status">MC: ROAST BATTLE LOADING... [INITIALIZING AIs]...</div>
-        <div class="controls">
-            <button id="startRoast">Initiate Roast Sequence</button>
-            <button id="clearLog">Clear Battle Log</button>
-        </div>
-        <div id="terminalLog" class="log"></div>
-        <div class="prompt">$ <span id="cursor">█</span></div>
+  <div id="terminal">
+    <pre class="ascii">
+  _____  _____   _____           _       _   _           ______           _ _ 
+ |  _  \|  _  | /  ___|         | |     | | (_)          | ___ \         | | |
+ | | | | | | | \ ` + "`" + `--. _ __   __| | __ _| |_ ___  ___ | |_/ /_ _ _ __ | | |
+ | | | | | | |  \`--. \ '_ \ / _\` |/ _\` | __/ _ \/ __||  __/ _\` | '_ \| | |
+ | |/ /| |/ /  /\__/ / | | | (_| | (_| | ||  __/\__ \| | | (_| | | | |_|_|
+ |___/ |___/   \____/|_| |_|\\__,_|\\__,_|\\__\\___||___/\\_|  \\__,_|_| |_(_|_)
+ 
+  Welcome to the ASCII AI Roast Terminal — may the sassiest model win!
+    </pre>
+
+    <div id="chat-log"></div>
+
+    <div id="chat-controls">
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+      <button id="clearBtn">Clear</button>
     </div>
-    <script src="script.js"></script>
+
+    <div id="preview-box">
+      <p id="preview-text">No roasts yet. Hit START to begin.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>🔥 AI Roast Battle Terminal — stream it live on OBS! 🔥</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
-
 </html>
-

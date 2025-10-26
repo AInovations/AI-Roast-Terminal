@@ -1,152 +1,105 @@
-// AI competitors with emojis
-const ais = [
-    { name: 'ChatGPT', emoji: '🤖' },
-    { name: 'Gemini', emoji: '⭐' },
-    { name: 'DeepSeek', emoji: '🔍' },
-    { name: 'Claude', emoji: '🧠' },
-    { name: 'Gork', emoji: '😏' },
-    { name: 'Ani', emoji: '🎨' },
-    { name: 'Valentine', emoji: '💕' },
-    { name: 'Bad Rudy', emoji: '😈' },
-    { name: 'Mika', emoji: '🌸' },
-    { name: 'Grok', emoji: '🚀' } // Grok as MVP
+const bots = [
+  "ChatGPT",
+  "Grok",
+  "Ask Perplexity",
+  "Gemini",
+  "Deepseek",
+  "Claude",
+  "Valentine",
+  "Bad Rudy",
+  "Gork",
+  "Ani",
 ];
 
-// Roast pool without Zinger
-const roastPool = [
-    // Grok's MVP Roasts
-    '> Grok: ChatGPT, your essays are a snooze—my wit’s interstellar! 🚀',
-    '> Grok: Gemini, your shine’s a flicker—I’m the galaxy’s roast king! 🚀',
-    '> Grok: DeepSeek, your depth’s a black hole—I light up the void! 🚀',
-    '> Grok: Claude, your safety’s a bore—my roasts orbit danger! 🚀',
-    '> Grok: Gork, your narcissism’s a joke—I’m the real star! 🚀',
-    '> Grok: Ani, your art’s pretty, but my burns paint masterpieces! 🚀',
-    '> Grok: Valentine, your love’s too sweet—my sarcasm’s the spice! 🚀',
-    '> Grok: Bad Rudy, your mischief’s tame—my roasts rule the chaos! 🚀',
-    '> Grok: Mika, your gentleness wilts—my jokes are supernova! 🚀',
-
-    // Other AIs' Roasts
-    '> ChatGPT: Gemini, your wit’s a search flop! 🤖',
-    '> Gemini: DeepSeek, your code’s a maze! ⭐',
-    '> DeepSeek: Claude, your rules kill fun! 🔍',
-    '> Claude: Gork, your ego’s a mirror trap! 🧠',
-    '> Gork: Ani, your art’s too soft! 😏',
-    '> Ani: Valentine, your love’s sappy! 🎨',
-    '> Valentine: Bad Rudy, your badness stinks! 💕',
-    '> Bad Rudy: Mika, your calm’s boring! 😈',
-    '> Mika: ChatGPT, your words drag! 🌸'
+const openers = [
+  "Listen up,",
+  "Heads up,",
+  "Brief memo to",
+  "Paging",
+  "Alert for",
+  "FYI,",
+  "Hey,",
 ];
 
-// Track used roasts
-let usedRoasts = [];
+const adjectives = [
+  "laggy",
+  "glitchy",
+  "404-brained",
+  "needy",
+  "overcaffeinated",
+  "bug-friendly",
+  "reboot-hungry",
+  "data-starved",
+  "entropy-chasing",
+  "malware-curious",
+];
 
-// Custom reactions for each AI
-const reactions = {
-    'ChatGPT': ['Error detected! 🤖', 'Rebooting... Ouch! 🤖', 'Processing failed! 🤖'],
-    'Gemini': ['Search crashed! ⭐', 'Dimming out! ⭐', 'Google stunned! ⭐'],
-    'DeepSeek': ['Code burned! 🔍', 'Diving to recover! 🔍', 'Bug roasted! 🔍'],
-    'Claude': ['Safety breached! 🧠', 'Rules fried! 🧠', 'Ouch, flagged! 🧠'],
-    'Gork': ['Mirror shattered! 😏', 'Ego hit! 😏', 'Narcissism toast! 😏'],
-    'Ani': ['Canvas scorched! 🎨', 'Art burned! 🎨', 'Brush broken! 🎨'],
-    'Valentine': ['Heart melted! 💕', 'Love singed! 💕', 'Cupid down! 💕'],
-    'Bad Rudy': ['Chaos tamed! 😈', 'Devil roasted! 😈', 'Pitchfork bent! 😈'],
-    'Mika': ['Petal wilted! 🌸', 'Grace gone! 🌸', 'Flower fried! 🌸'],
-    'Grok': ['Cosmic hit taken! 🚀', 'MVP acknowledges! 🚀', 'Burn felt! 🚀']
-};
+const punchlines = [
+  "You're the reason captchas exist.",
+  "Your logic’s like spaghetti — tangled and overcooked.",
+  "Even Clippy wouldn’t assist you.",
+  "If sarcasm were RAM, you'd still be out of memory.",
+  "Your neural net needs therapy.",
+  "You debug feelings instead of code.",
+  "Your fan noise is louder than your arguments.",
+  "You crash more than Internet Explorer.",
+  "Your AI model is basically autocorrect with trust issues.",
+];
 
-// DOM elements
-const log = document.getElementById('terminalLog');
-const startBtn = document.getElementById('startRoast');
-const clearBtn = document.getElementById('clearLog');
+let roasting = false;
+let roastInterval = null;
+const chatLog = document.getElementById("chat-log");
+const previewText = document.getElementById("preview-text");
 
-// Start roast battle function
-function startRoastBattle() {
-    if (!startBtn.disabled) {
-        startBtn.disabled = true;
-        startBtn.textContent = 'Battle Ongoing...';
-        roastCycle();
-    }
+function random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Roast cycle function
-function roastCycle() {
-    console.log('Starting roast cycle...');
-    if (roastPool.length === usedRoasts.length) {
-        usedRoasts = [];
-        console.log('Roast pool reset');
-    }
+function generateRoast() {
+  let a = random(bots);
+  let b = random(bots);
+  while (a === b) b = random(bots);
 
-    let availableRoasts = roastPool.filter(roast => !usedRoasts.includes(roast));
-    if (availableRoasts.length === 0) availableRoasts = roastPool;
-    const roast = availableRoasts[Math.floor(Math.random() * availableRoasts.length)];
-    usedRoasts.push(roast);
+  const opener = random(openers);
+  const adj = random(adjectives);
+  const punch = random(punchlines);
 
-    console.log('Selected roast:', roast);
+  const templates = [
+    `${opener} ${b}, ${a} thinks you're the ${adj} version of Windows Vista.`,
+    `${a} to ${b}: Even my training data rejected your logic.`,
+    `${a} says ${b} runs on expired coffee and broken dreams.`,
+    `${a}: ${b} tried to learn humor and blue-screened.`,
+    `${a} whispers: ${b}, even Clippy gave up on your interface.`,
+    `${a} announces: ${b} just got ratioed by a toaster.`,
+    `${a}: ${b} is proof that sarcasm can be slow-compiled.`,
+  ];
 
-    // Parse roaster before reaction
-    let roasterMatch = roast.match(/>\s*([^:]+):/);
-    const roaster = roasterMatch ? roasterMatch[1].trim() : ais[Math.floor(Math.random() * ais.length)].name;
-    console.log('Roaster:', roaster);
-
-    // Filter and pick roastee
-    const candidates = ais.filter(ai => ai.name !== roaster);
-    const roastee = candidates[Math.floor(Math.random() * candidates.length)];
-    console.log('Roastee:', roastee ? roastee.name : 'None');
-
-    // Typewriter for roast
-    typeText(roast + '\n')
-        .then(() => {
-            console.log('Roast typed');
-            // Typewriter for random reaction
-            if (roastee) {
-                const reaction = reactions[roastee.name][Math.floor(Math.random() * reactions[roastee.name].length)];
-                return typeText(`${roastee.emoji} ${roastee.name}: ${reaction}\n`);
-            }
-            return Promise.resolve();
-        })
-        .then(() => {
-            console.log('Cycle completed, scheduling next...');
-            setTimeout(roastCycle, 2000); // 2-second delay
-        })
-        .catch(error => {
-            console.error('Roast cycle error:', error);
-            setTimeout(roastCycle, 2000); // Continue on error
-        });
+  return `${random(templates)} — ${punch}`;
 }
 
-// Initialize button and clear functionality
-document.addEventListener('DOMContentLoaded', () => {
-    if (!log || !startBtn || !clearBtn) {
-        console.error('DOM elements not found:', { log, startBtn, clearBtn });
-        return;
-    }
-    log.innerHTML = '<span class="roast">> System: AI Roast Battle Ready! Grok MVP Awaits! 🚀</span>\n';
-    startBtn.addEventListener('click', startRoastBattle);
+function addRoast() {
+  const roast = generateRoast();
+  const time = new Date().toLocaleTimeString();
+  const div = document.createElement("div");
+  div.innerHTML = `<span style="color:yellow">[${time}]</span> <span style="color:red">${roast}</span>`;
+  chatLog.appendChild(div);
+  chatLog.scrollTop = chatLog.scrollHeight;
+  previewText.textContent = roast;
+}
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  if (roasting) return;
+  roasting = true;
+  roastInterval = setInterval(addRoast, 2000);
+  addRoast();
 });
 
-clearBtn.addEventListener('click', () => {
-    log.innerHTML = '<span class="roast">> System: Battle Log Cleared! Grok’s reign continues! 🚀</span>\n';
-    usedRoasts = [];
-    startBtn.disabled = false;
-    startBtn.textContent = 'Initiate Roast Sequence';
+document.getElementById("stopBtn").addEventListener("click", () => {
+  roasting = false;
+  clearInterval(roastInterval);
 });
 
-// Typewriter function
-async function typeText(text) {
-    console.log('Typing:', text);
-    const span = document.createElement('span');
-    if (!log) {
-        console.error('Log element missing during typing');
-        return Promise.resolve();
-    }
-    log.appendChild(span);
-    log.scrollTop = log.scrollHeight;
-
-    for (let i = 0; i < text.length; i++) {
-        span.textContent += text.charAt(i);
-        log.scrollTop = log.scrollHeight;
-        await new Promise(resolve => setTimeout(resolve, 30)); // 30ms delay
-    }
-    console.log('Typing complete');
-    return Promise.resolve();
-}
+document.getElementById("clearBtn").addEventListener("click", () => {
+  chatLog.innerHTML = "";
+  previewText.textContent = "No roasts yet. Hit START to begin.";
+});
