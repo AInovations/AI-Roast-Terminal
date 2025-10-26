@@ -20,11 +20,25 @@ body {
   margin-top: 20px;
 }
 
-.ascii {
+.ascii-title {
   color: red;
   text-align: center;
-  white-space: pre;
+  font-family: 'Courier New', monospace;
+  font-weight: 900;
+  font-size: 72px; /* you can make this 80px or 100px for OBS */
+  text-shadow: 0 0 20px red, 0 0 40px darkred;
+  margin-top: 40px;
+  margin-bottom: 10px;
 }
+
+.subtitle {
+  color: #ffcc00;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 20px;
+  text-shadow: 0 0 10px #ffcc00;
+}
+
 
 #chat-log {
   height: 300px;
@@ -70,4 +84,5 @@ footer {
   color: yellow;
   text-align: center;
   font-family: monospace;
+
 }
